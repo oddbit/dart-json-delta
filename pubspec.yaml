@@ -1,0 +1,20 @@
+name: json_delta
+description: Dart extension for serializing and an object to a JSON delta.
+version: 0.0.1
+homepage: https://github.com/oddbit/dart-json-delta
+
+environment:
+  sdk: ">=3.2.3 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
