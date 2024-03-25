@@ -1,6 +1,6 @@
 name: json_delta
 description: Dart extension for serializing and an object to a JSON delta.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/oddbit/dart-json-delta
 
 environment:
