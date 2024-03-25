@@ -6,10 +6,6 @@ abstract class JsonSerializable {
   Map<String, dynamic> toJson();
 }
 
-abstract class JsonSerializable2 {
-  Map<String, dynamic> toJson();
-}
-
 /// This mixin allows for any class that implements a `toJson` method to be
 /// able to return the delta JSON from the time the object was created until
 /// the current time. This allows for creating a sort of "patch JSON" or diff
@@ -31,7 +27,7 @@ mixin JsonDelta on JsonSerializable {
   /// It can be called at any time in later stages of the object's lifecycle
   /// if it makes sense to consider the state to be the initial state at that
   /// point.
-  void saveState() {
+  void saveJsonDeltaState() {
     _initialState = _deepCopy(toJson());
   }
 

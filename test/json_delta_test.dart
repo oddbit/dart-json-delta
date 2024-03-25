@@ -16,7 +16,7 @@ class _TestUser extends JsonSerializable with JsonDelta {
     required this.hobbies,
     required this.config,
   }) {
-    saveState();
+    saveJsonDeltaState();
   }
 
   @override
