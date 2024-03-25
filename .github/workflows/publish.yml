@@ -1,0 +1,77 @@
+name: Publish package to pub.dev
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - run: flutter --version
+
+      - run: flutter pub get
+
+      - run: dart format --set-exit-if-changed .
+
+      - run: flutter analyze --verbose
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Run tests
+        run: flutter test --coverage --test-randomize-ordering-seed=$RANDOM
+      
+      - name: Generate coverage report
+        run: genhtml coverage/lcov.info -o coverage/html
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverate-report
+          path: coverage/html
+
+
+  publish:
+    name: Publish Plugin
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - run: flutter --version
+
+      - run: flutter pub get
+
+      - name: Publish package
+        run: flutter pub publish --force
