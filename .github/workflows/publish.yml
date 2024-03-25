@@ -29,15 +29,7 @@ jobs:
       - run: flutter analyze --verbose
 
       - name: Run tests
-        run: flutter test --coverage --test-randomize-ordering-seed=$RANDOM
-
-      - name: Generate coverage report
-        run: genhtml coverage/lcov.info -o coverage/html
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: coverate-report
-          path: coverage/html
+        run: flutter test --test-randomize-ordering-seed=$RANDOM
 
       - name: Publish package
         run: flutter pub publish --force
