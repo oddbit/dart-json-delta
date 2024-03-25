@@ -12,7 +12,8 @@ final delta = person.toJsonDelta(); // {"lastName": "Smith", "age": 31}
 
 
 ### Implement in your models
-
+An important note is that you call the `saveJsonDeltaState()` in the model's
+constructor to set an initial state to compare against later.
 ```dart
 class Person extends JsonSerializable with JsonDelta {
   String firstName;
@@ -24,6 +25,7 @@ class Person extends JsonSerializable with JsonDelta {
     required this.lastName,
     required this.age,
   }) {
+    // Save the initial state of your object in the constructor
     saveJsonDeltaState();
   }
 
