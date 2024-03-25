@@ -5,7 +5,6 @@ import "package:collection/collection.dart";
 /// Abstract class for `JsonDelta` mixin to work with. This class should be
 /// implemented by any class that wants to use the `JsonDelta` mixin.
 abstract class JsonSerializable {
-  
   /// Converts the object to a JSON object
   /// This method should implement your object's serialization logic
   /// that will be used to save the object's state and compare it later.
