@@ -4,7 +4,7 @@ description: >-
   state. Pairs with json_serializable. Pure Dart — works in Flutter, server,
   and CLI.
 version: 0.2.0
-homepage: https://github.com/oddbit/dart-json-delta
+homepage: https://oddb.it/website
 repository: https://github.com/oddbit/dart-json-delta
 issue_tracker: https://github.com/oddbit/dart-json-delta/issues
 
