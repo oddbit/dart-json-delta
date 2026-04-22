@@ -3,7 +3,7 @@ name: Release pub.dev package
 on:
   push:
     tags:
-      - 'pub-v*'
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 permissions:
   contents: write
@@ -29,9 +29,9 @@ jobs:
         id: version
         run: |
           TAG="${GITHUB_REF_NAME}"
-          VERSION="${TAG#pub-v}"
+          VERSION="${TAG#v}"
           if [ -z "$VERSION" ] || [ "$VERSION" = "$TAG" ]; then
-            echo "Tag $TAG does not match expected pub-v<version> pattern" >&2
+            echo "Tag $TAG does not match expected v<version> pattern" >&2
             exit 1
           fi
           MANIFEST_VERSION=$(grep '^version:' pubspec.yaml | head -n1 | awk '{print $2}' | tr -d '"')
@@ -67,7 +67,7 @@ jobs:
         # Auth is handled by dart-lang/setup-dart via OIDC. Configure the
         # trust relationship once in pub.dev: package admin -> Automated
         # publishing -> GitHub Actions, repository oddbit/dart-json-delta,
-        # tag pattern pub-v{{version}}.
+        # tag pattern v{{version}}.
         run: dart pub publish --force
 
       - name: Create GitHub release

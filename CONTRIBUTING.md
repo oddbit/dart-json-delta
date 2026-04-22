@@ -44,11 +44,11 @@ behavior.
 
 Before tagging a release, update the `version:` field in `pubspec.yaml` and
 add a new section to `CHANGELOG.md`. Then create and push a tag in the form
-`pub-v<major>.<minor>.<patch>`:
+`v<major>.<minor>.<patch>`:
 
 ```bash
-git tag pub-v0.2.0
-git push origin pub-v0.2.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 The `publish.yml` workflow will verify that the tag version matches
@@ -56,4 +56,4 @@ The `publish.yml` workflow will verify that the tag version matches
 and create a GitHub Release with the matching `CHANGELOG.md` section as the
 release notes. For the OIDC hand-off to work, the pub.dev package must have
 an "Automated publishing" trust configured for this repository and the
-`pub-v{{version}}` tag pattern.
+`v{{version}}` tag pattern.
