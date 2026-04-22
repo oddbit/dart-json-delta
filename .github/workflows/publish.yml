@@ -1,29 +1,79 @@
-name: Publish package to pub.dev
+name: Release pub.dev package
+
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+*"
+      - 'pub-v*'
+
+permissions:
+  contents: write
+  # Required so dart-lang/setup-dart can request an OIDC token that pub.dev
+  # trusts for automated publishing. pub.dev requires the token to carry
+  # refType=tag, so this workflow must be triggered by a tag push.
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#pub-v}"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$TAG" ]; then
+            echo "Tag $TAG does not match expected pub-v<version> pattern" >&2
+            exit 1
+          fi
+          MANIFEST_VERSION=$(grep '^version:' pubspec.yaml | head -n1 | awk '{print $2}' | tr -d '"')
+          if [ "$MANIFEST_VERSION" != "$VERSION" ]; then
+            echo "Tag version $VERSION does not match pubspec.yaml version $MANIFEST_VERSION" >&2
+            exit 1
+          fi
+          echo "current=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Extract changelog for version
+        run: |
+          bash scripts/extract-changelog.sh \
+            "${{ steps.version.outputs.current }}" \
+            CHANGELOG.md \
+            /tmp/pub-release-notes.md
 
       - uses: dart-lang/setup-dart@v1
 
-      - run: dart --version
+      - name: Install dependencies
+        run: dart pub get
 
-      - run: dart pub get
+      - name: Verify formatting
+        run: dart format --set-exit-if-changed .
 
-      - run: dart format --set-exit-if-changed .
+      - name: Analyze
+        run: dart analyze --fatal-infos
 
-      - run: dart analyze --fatal-infos
+      - name: Test
+        run: dart test
 
-      - name: Run tests
-        run: dart test --test-randomize-ordering-seed=random
-
-      - name: Publish package
+      - name: Publish to pub.dev
+        # Auth is handled by dart-lang/setup-dart via OIDC. Configure the
+        # trust relationship once in pub.dev: package admin -> Automated
+        # publishing -> GitHub Actions, repository oddbit/dart-json-delta,
+        # tag pattern pub-v{{version}}.
         run: dart pub publish --force
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes-file /tmp/pub-release-notes.md
