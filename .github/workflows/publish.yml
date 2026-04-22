@@ -12,24 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-
       - uses: dart-lang/setup-dart@v1
 
-      - run: flutter --version
+      - run: dart --version
 
-      - run: flutter pub get
+      - run: dart pub get
 
       - run: dart format --set-exit-if-changed .
 
-      - run: flutter analyze --verbose
+      - run: dart analyze --fatal-infos
 
       - name: Run tests
-        run: flutter test --test-randomize-ordering-seed=$RANDOM
+        run: dart test --test-randomize-ordering-seed=random
 
       - name: Publish package
-        run: flutter pub publish --force
+        run: dart pub publish --force

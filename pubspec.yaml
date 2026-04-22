@@ -1,20 +1,19 @@
 name: json_delta
-description: Dart extension for serializing and an object to a JSON delta.
-version: 0.1.1
+description: >-
+  Compute a JSON delta (patch) from an object's initial state to its current
+  state. Pairs with json_serializable. Pure Dart — works in Flutter, server,
+  and CLI.
+version: 0.2.0
 homepage: https://github.com/oddbit/dart-json-delta
+repository: https://github.com/oddbit/dart-json-delta
+issue_tracker: https://github.com/oddbit/dart-json-delta/issues
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
-  flutter: ">=1.17.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  collection: ^1.18.0
+  collection: ^1.19.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.1
-
-flutter:
+  lints: ^6.0.0
+  test: ^1.25.0
