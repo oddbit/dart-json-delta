@@ -3,6 +3,17 @@
 // This source file is part of json_delta.
 // Licensed under the Apache License, Version 2.0. See LICENSE and NOTICE.
 
+/// Compute a JSON delta (patch) from an object's initial state to its
+/// current state.
+///
+/// Mix [JsonDelta] into any class that implements [JsonSerializable] to get
+/// a `toJsonDelta()` method returning only the fields that have changed
+/// since the baseline was captured by `saveJsonDeltaState()`.
+///
+/// Pairs naturally with
+/// [`json_serializable`](https://pub.dev/packages/json_serializable).
+library;
+
 import 'package:collection/collection.dart';
 
 /// Contract for objects that can be serialized to a JSON map.
@@ -11,6 +22,10 @@ import 'package:collection/collection.dart';
 /// by [toJson] is the authoritative representation of the object's state for
 /// the purpose of computing a delta.
 abstract class JsonSerializable {
+  /// Const constructor to allow subclasses to define their own const
+  /// constructors. This class has no state of its own.
+  const JsonSerializable();
+
   /// Returns a JSON-compatible map of the object's current state.
   ///
   /// The values should be JSON-encodable (primitives, [List], [Map], or types

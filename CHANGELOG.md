@@ -17,7 +17,11 @@
   nested-map changes, baseline reset, immutability of baseline and returned
   delta, added/removed top-level keys.
 - Expand README with install instructions, how-it-works, and limitations.
-- Add an `example/` directory.
+- Add an `example/` directory with a runnable example and `example/README.md`
+  so pub.dev renders an Example tab (closes the previous 0/10 example-score
+  gap).
+- Document the previously-implicit `JsonSerializable` default constructor
+  and add a library-level dartdoc so 100% of the public API is documented.
 - Publish workflow now uses Dart directly instead of Flutter.
 
 ## 0.1.1
